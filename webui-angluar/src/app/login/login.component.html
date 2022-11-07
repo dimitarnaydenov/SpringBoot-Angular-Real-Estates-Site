@@ -1,0 +1,20 @@
+<form #login = "ngForm" (ngSubmit) = "onClickSubmit(login.value)">
+    <div class="container">
+      <h1>Login</h1>
+      <p></p>
+      <hr>
+  
+      <label for="username"><b>Username</b></label>
+      <input type="text" placeholder="Enter Username" name="username" id="username" required ngModel>
+      <br />
+      <br />
+      <label for="psw"><b>Password</b></label>
+      <input type="password" placeholder="Enter Password" name="password" id="password" required ngModel>
+  
+      <hr>
+  
+      <button type="submit" class="loginbtn">Login</button>
+    </div>
+  
+    
+  </form>
