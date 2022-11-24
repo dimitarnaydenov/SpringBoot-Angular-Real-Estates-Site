@@ -24,5 +24,13 @@ public class UserService implements UserDetailsService {
         return User.withUsername(user.getUsername()).password(user.getPassword()).authorities("USER").build();
     }
 
+    public CustomUser getUser(String username){
+        return userRepository.findByUsername(username).get();
+    }
+
     public void addUser(CustomUser customUser){userRepository.save(customUser);}
+
+    public boolean existsByUsername(String username){
+        return userRepository.findByUsername(username).isPresent();
+    }
 }
