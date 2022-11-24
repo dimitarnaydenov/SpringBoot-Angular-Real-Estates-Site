@@ -12,7 +12,7 @@ import java.util.List;
 public class PropertyService{
 
     @Autowired
-    PropertyRepository propertyRepository;
+    private PropertyRepository propertyRepository;
 
     public List<Property> findAll(){
         return (List<Property>) propertyRepository.findAll();
@@ -21,4 +21,6 @@ public class PropertyService{
     public Property addProperty(Property property){
         return propertyRepository.save(property);
     }
+
+    public Property getPropertyById(int id){return propertyRepository.findById(id).get();}
 }

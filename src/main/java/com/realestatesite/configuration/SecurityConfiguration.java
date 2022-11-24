@@ -36,6 +36,7 @@ public class SecurityConfiguration{
                 .antMatchers("/login").permitAll()
                 .antMatchers("/all").authenticated()
                 .antMatchers("/addProperty").permitAll()
+                .antMatchers("/getProperty").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .logout()
