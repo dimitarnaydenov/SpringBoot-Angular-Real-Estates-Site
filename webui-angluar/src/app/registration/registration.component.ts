@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { UserService } from '../services/user.service';
 
 @Component({
@@ -8,14 +9,19 @@ import { UserService } from '../services/user.service';
 })
 export class RegistrationComponent implements OnInit {
 
-  constructor(private userService:UserService) { }
+  constructor(private userService:UserService, private router: Router) { }
 
   ngOnInit(): void {
   }
 
   onClickSubmit(data:any) {
-
-    this.userService.register({"username":data.username,"password":data.password})
+    
+    this.userService.register({"username":data.username,"password":data.password}).subscribe({
+      complete: () => {this.router.navigate(['/login'])},
+      error: err => {
+        alert(err.error)
+      }
+    });
     
  }
 
