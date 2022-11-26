@@ -1,5 +1,6 @@
 package com.realestatesite.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -21,6 +22,10 @@ public class CustomUser implements UserDetails {
 
     @ManyToMany(fetch = FetchType.EAGER)
     private Collection<Role> roles = new ArrayList<>();
+
+    @OneToMany(mappedBy = "customUser")
+    @JsonIgnore
+    private Collection<Property> properties = new ArrayList<>();
 
     public CustomUser() {
     }
@@ -64,6 +69,14 @@ public class CustomUser implements UserDetails {
 
     public void addRole(Role role) {
         this.roles.add(role);
+    }
+
+    public Collection<Property> getProperties() {
+        return properties;
+    }
+
+    public void setProperties(Collection<Property> properties) {
+        this.properties = properties;
     }
 
     @Override
