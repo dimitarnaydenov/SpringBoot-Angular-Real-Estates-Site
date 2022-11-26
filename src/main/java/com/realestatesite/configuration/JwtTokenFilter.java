@@ -6,6 +6,8 @@ import com.realestatesite.services.UserService;
 import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -40,10 +42,6 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 
         String token = getAccessToken(request);
 
-        String username = getUserDetails(token).getUsername();
-
-        userService.loadUserByUsername(username);
-
         if (!jwtUtil.validateAccessToken(token)) {
             filterChain.doFilter(request, response);
             return;
@@ -70,14 +68,15 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 
     private void setAuthenticationContext(String token, HttpServletRequest request) {
         CustomUser user = getUserDetails(token);
-
         UsernamePasswordAuthenticationToken
                 authentication = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
 
         authentication.setDetails(
                 new WebAuthenticationDetailsSource().buildDetails(request));
 
+
         SecurityContextHolder.getContext().setAuthentication(authentication);
+
     }
 
     private CustomUser getUserDetails(String token) {

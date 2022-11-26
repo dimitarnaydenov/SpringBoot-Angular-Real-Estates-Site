@@ -10,7 +10,7 @@ import java.util.Date;
 
 @Component
 public class JwtTokenUtil {
-    private static final long EXPIRE_DURATION = 60 * 1000; // 24 hour
+    private static final long EXPIRE_DURATION = 24*60 * 1000; // 24 hour
 
     @Value("${app.jwt.secret}")
     private String SECRET_KEY;
@@ -19,7 +19,7 @@ public class JwtTokenUtil {
         return Jwts.builder()
                 .setSubject(String.format("%s,%s", user.getId(), user.getUsername()))
                 .setIssuer("RealEstates")
-                .claim("roles",user.getRoles().toString())
+                .claim("roles",user.getAuthorities().toString())
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + EXPIRE_DURATION))
                 .signWith(SignatureAlgorithm.HS512, SECRET_KEY)

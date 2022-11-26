@@ -50,14 +50,14 @@ public class UserController {
         CustomUser user = new CustomUser();
         user.setUsername(registerDTO.getUsername());
         user.setPassword(passwordEncoder.encode(registerDTO.getPassword()));
-        if(roleService.getRole("USER") == null)
+        if(roleService.getRole("ROLE_USER") == null)
         {
-            roleService.addRole(new Role("USER"));
+            roleService.addRole(new Role("ROLE_USER"));
         }
-        user.addRole(roleService.getRole("USER"));
+        user.addRole(roleService.getRole("ROLE_USER"));
         userService.addUser(user);
 
-        return ResponseEntity.ok().body("User registered successfully");
+        return ResponseEntity.status(HttpStatus.CREATED).build();
 
     }
 
@@ -72,7 +72,7 @@ public class UserController {
             UserDetails userDetails = (UserDetails) authentication.getPrincipal();
             CustomUser user = (CustomUser) userService.getUser(userDetails.getUsername());
             String accessToken = jwtUtil.generateAccessToken(user);
-            AuthResponseDTO response = new AuthResponseDTO(user.getUsername(), accessToken);
+            AuthResponseDTO response = new AuthResponseDTO(user.getUsername(), accessToken, user.getRoles().stream().findFirst().get().getName());
 
             return ResponseEntity.ok().body(response);
 
