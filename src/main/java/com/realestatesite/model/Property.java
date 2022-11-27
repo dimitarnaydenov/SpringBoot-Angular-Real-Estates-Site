@@ -1,8 +1,6 @@
 package com.realestatesite.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sun.istack.NotNull;
-import org.springframework.security.core.userdetails.User;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -14,7 +12,7 @@ public class Property {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    private String name;
+    private String type;
     @NotNull
     private BigDecimal price;
     @NotNull
@@ -26,8 +24,8 @@ public class Property {
     @ManyToOne()
     private CustomUser customUser;
 
-    public Property(String name, BigDecimal price, String address, String description, int area) {
-        this.name = name;
+    public Property(String type, BigDecimal price, String address, String description, int area) {
+        this.type = type;
         this.price = price;
         this.address = address;
         this.description = description;
@@ -45,12 +43,12 @@ public class Property {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getType() {
+        return type;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setType(String type) {
+        this.type = type;
     }
 
     public BigDecimal getPrice() {

@@ -2,9 +2,13 @@ package com.realestatesite.controller;
 
 import com.realestatesite.model.CustomUser;
 import com.realestatesite.model.Property;
+import com.realestatesite.repositories.PropertyRepository;
 import com.realestatesite.services.PropertyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.realestatesite.model.Role;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -14,7 +18,9 @@ import org.springframework.web.client.HttpClientErrorException;
 
 import javax.annotation.security.RolesAllowed;
 import java.net.http.HttpResponse;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:4200")
@@ -25,15 +31,26 @@ public class PropertyController {
     PropertyService propertyService;
 
     @GetMapping("/all")
-    @RolesAllowed({"ROLE_USER","ROLE_ADMIN"})
-    public List<Property> getAllProperties() {
-        return (List<Property>) propertyService.findAll();
+    public ResponseEntity<Map<String, Object>> getAllProperties(@RequestParam(defaultValue = "0") int page,
+                                                                @RequestParam(defaultValue = "6") int size) {
+        Pageable paging = PageRequest.of(page, size);
+
+        Page<Property> pageProperties = propertyService.findAll(paging);
+
+        List<Property> properties = pageProperties.getContent();
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("properties", properties);
+        response.put("currentPage", pageProperties.getNumber());
+        response.put("totalItems", pageProperties.getTotalElements());
+        response.put("totalPages", pageProperties.getTotalPages());
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @GetMapping("/test")
-    @RolesAllowed("ROLE_USER")
-    public ResponseEntity<?> test() {
-        return new ResponseEntity<>("text",HttpStatus.OK);
+    @GetMapping("/search")
+    public ResponseEntity<?> search(@RequestParam String search) {
+        return new ResponseEntity<>(propertyService.searchProperties(search),HttpStatus.OK);
     }
 
     @PostMapping("/addProperty")

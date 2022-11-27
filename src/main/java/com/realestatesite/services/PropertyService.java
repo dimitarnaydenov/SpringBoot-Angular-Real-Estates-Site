@@ -1,10 +1,10 @@
 package com.realestatesite.services;
 
-import com.fasterxml.jackson.databind.annotation.JsonAppend;
 import com.realestatesite.model.Property;
 import com.realestatesite.repositories.PropertyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,8 +15,8 @@ public class PropertyService{
     @Autowired
     private PropertyRepository propertyRepository;
 
-    public List<Property> findAll(){
-        return (List<Property>) propertyRepository.findAll();
+    public Page<Property> findAll(Pageable paging){
+        return propertyRepository.findAll(paging);
     }
 
     public Property addProperty(Property property){
@@ -30,8 +30,8 @@ public class PropertyService{
     public Property editPropertyById(int id, Property propertyDTO){
         Property property = propertyRepository.findById(id).get();
 
-        if(propertyDTO.getName() != null){
-            property.setName(propertyDTO.getName());
+        if(propertyDTO.getType() != null){
+            property.setType(propertyDTO.getType());
         }
 
         if(propertyDTO.getAddress() != null){
@@ -47,5 +47,9 @@ public class PropertyService{
         }
 
         return propertyRepository.save(property);
+    }
+
+    public List<Property> searchProperties(String search){
+        return propertyRepository.findByTypeContainsOrAddressContainsOrDescriptionContains(search,search,search);
     }
 }

@@ -18,6 +18,7 @@ public class CustomUser implements UserDetails {
     private Integer id;
 
     private String username;
+    @JsonIgnore
     private String password;
 
     @ManyToMany(fetch = FetchType.EAGER)
