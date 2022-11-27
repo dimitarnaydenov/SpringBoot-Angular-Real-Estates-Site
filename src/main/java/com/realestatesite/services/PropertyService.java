@@ -1,5 +1,6 @@
 package com.realestatesite.services;
 
+import com.realestatesite.model.CustomUser;
 import com.realestatesite.model.Property;
 import com.realestatesite.repositories.PropertyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,5 +52,9 @@ public class PropertyService{
 
     public List<Property> searchProperties(String search){
         return propertyRepository.findByTypeContainsOrAddressContainsOrDescriptionContains(search,search,search);
+    }
+
+    public List<Property> getPropertiesByCustomUser(CustomUser customUser){
+        return  propertyRepository.findByCustomUser(customUser);
     }
 }
