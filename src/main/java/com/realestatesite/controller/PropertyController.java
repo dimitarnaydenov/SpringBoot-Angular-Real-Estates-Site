@@ -1,23 +1,32 @@
 package com.realestatesite.controller;
 
+import com.realestatesite.helpers.FileUploadUtil;
 import com.realestatesite.model.CustomUser;
 import com.realestatesite.model.Property;
-import com.realestatesite.repositories.PropertyRepository;
 import com.realestatesite.services.PropertyService;
+import com.realestatesite.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.realestatesite.model.Role;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.security.RolesAllowed;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.http.HttpResponse;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,6 +38,9 @@ public class PropertyController {
 
     @Autowired
     PropertyService propertyService;
+
+    @Autowired
+    UserService userService;
 
     @GetMapping("/all")
     public ResponseEntity<Map<String, Object>> getAllProperties(@RequestParam(defaultValue = "0") int page,
@@ -55,15 +67,57 @@ public class PropertyController {
 
     @PostMapping("/addProperty")
     @RolesAllowed({"ROLE_USER","ROLE_ADMIN"})
-    public ResponseEntity<Property> addProperty(@RequestBody Property property) {
+    public ResponseEntity<Property> addProperty(@ModelAttribute Property property,  @RequestParam("images") MultipartFile[] files) throws IOException {
+        //TODO check files
         property.setCustomUser((CustomUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+        property.setPhotosCount(files.length);
         Property _property = propertyService.addProperty(property);
+
+        int i = 1;
+        for(MultipartFile file : files){
+            String fileName = "photo_" + i++;
+
+            String uploadDir = "property-pictures/" + _property.getId() +"/";
+
+            try {
+                FileUploadUtil.saveFile(uploadDir, fileName, file);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
         return new ResponseEntity<>(_property, HttpStatus.CREATED);
+    }
+
+    @PostMapping(path = "/test")
+    public void test(@RequestParam("image") MultipartFile multipartFile) throws IOException {
+        String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
+
+        String uploadDir = "user-photos/" + 1;
+
+        Path uploadPath = Paths.get(uploadDir);
+
+        if (!Files.exists(uploadPath)) {
+            Files.createDirectories(uploadPath);
+        }
+
+        try (InputStream inputStream = multipartFile.getInputStream()) {
+            Path filePath = uploadPath.resolve(fileName);
+            Files.copy(inputStream, filePath, StandardCopyOption.REPLACE_EXISTING);
+        } catch (IOException ioe) {
+            throw new IOException("Could not save image file: " + fileName, ioe);
+        }
     }
 
     @GetMapping("/getProperty")
     public Property getPropertyById(@RequestParam String id) {
         return propertyService.getPropertyById(Integer.parseInt(id));
+    }
+
+    @GetMapping("/getUserProperties")
+    public List<Property> getUserProperties() {
+        CustomUser customUser = (CustomUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return propertyService.getPropertiesByCustomUser(customUser);
     }
 
     @PostMapping("/editProperty")

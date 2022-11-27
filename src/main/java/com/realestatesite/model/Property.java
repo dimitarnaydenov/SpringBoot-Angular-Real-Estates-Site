@@ -4,6 +4,8 @@ import com.sun.istack.NotNull;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class Property {
@@ -20,6 +22,8 @@ public class Property {
     private String description;
 
     private int area;
+
+    private int photosCount;
 
     @ManyToOne()
     private CustomUser customUser;
@@ -89,5 +93,21 @@ public class Property {
 
     public void setCustomUser(CustomUser customUser) {
         this.customUser = customUser;
+    }
+
+    public int getPhotosCount() {
+        return photosCount;
+    }
+
+    public void setPhotosCount(int photosCount) {
+        this.photosCount = photosCount;
+    }
+
+    public List<String> getPhotos(){
+        ArrayList<String> photos = new ArrayList<>();
+        for (int i = 0; i < photosCount; i++) {
+            photos.add("property-pictures/" + id +"/"+"photo_" + i+1);
+        }
+        return photos;
     }
 }
