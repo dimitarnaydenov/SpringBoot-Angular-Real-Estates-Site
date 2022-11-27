@@ -37,4 +37,8 @@ public class UserService implements UserDetailsService {
     public boolean existsByUsername(String username){
         return userRepository.findByUsername(username).isPresent();
     }
+
+    public CustomUser findUserById(int id){
+        return userRepository.findById(id).get();
+    }
 }
