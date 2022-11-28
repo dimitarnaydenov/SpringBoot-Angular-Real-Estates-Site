@@ -1,33 +1,45 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+import { GlobalComponent } from '../global-component';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
 
-  private url: string = "http://localhost:8888/"
+  private url: string = GlobalComponent.url;
 
   constructor(private http: HttpClient) { }
 
-  register(user:any){
-    this.http.post<any>(this.url+'register', user).subscribe(data => {
-      console.log(data);
-  })
+  register(user:any): Observable<any>{
+   return this.http.post<any>(this.url+'register', user)
   }
 
-  login(user:any){
-    this.http.post<any>(this.url+'login', user).subscribe(data => {
-      console.log(data);
-      window.sessionStorage.setItem('user', data['accessToken']);
-  })
+  login(user:any): Observable<any>{
+    return this.http.post<any>(this.url+'login', user)  
   }
 
   logout(){
+    this.http.get(this.url+'logout')
+    sessionStorage.clear();
     
   }
 
+  isLogged():boolean{
+    return (sessionStorage.getItem("user") !== null); 
+
+  }
+
+  isAdmin():boolean{
+    return (sessionStorage.getItem("role") === "ROLE_ADMIN"); 
+  }
+
   getToken() {
-    return localStorage.getItem('user');
+    return sessionStorage.getItem('user');
+  }
+
+  getUsername(){
+    return sessionStorage.getItem('username');
   }
 }
