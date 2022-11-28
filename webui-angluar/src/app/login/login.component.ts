@@ -20,6 +20,7 @@ export class LoginComponent implements OnInit {
     this.userService.login({"username":data.username,"password":data.password}).subscribe({
       next: data => {
         window.sessionStorage.setItem('user', data['accessToken']);
+        window.sessionStorage.setItem('username', data['username']);
         window.sessionStorage.setItem('role', data['role']);
         this.router.navigate(['/home']).then(() => {
           window.location.reload();
