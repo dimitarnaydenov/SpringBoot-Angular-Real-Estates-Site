@@ -2,7 +2,10 @@ package com.realestatesite.controller;
 
 import com.realestatesite.helpers.FileUploadUtil;
 import com.realestatesite.model.CustomUser;
+import com.realestatesite.model.Photo;
 import com.realestatesite.model.Property;
+import com.realestatesite.repositories.FileRepository;
+import com.realestatesite.repositories.PhotoRepository;
 import com.realestatesite.services.PropertyService;
 import com.realestatesite.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,12 +24,10 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.annotation.security.RolesAllowed;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.http.HttpResponse;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -41,6 +42,9 @@ public class PropertyController {
 
     @Autowired
     UserService userService;
+
+    @Autowired
+    FileRepository fileRepository;
 
     @GetMapping("/all")
     public ResponseEntity<Map<String, Object>> getAllProperties(@RequestParam(defaultValue = "0") int page,
@@ -67,25 +71,27 @@ public class PropertyController {
 
     @PostMapping("/addProperty")
     @RolesAllowed({"ROLE_USER","ROLE_ADMIN"})
-    public ResponseEntity<Property> addProperty(@ModelAttribute Property property,  @RequestParam("images") MultipartFile[] files) throws IOException {
-        //TODO check files
+    public ResponseEntity<Property> addProperty(@ModelAttribute Property property,  @RequestParam("images[]") MultipartFile[] files) throws IOException {
+
+        if (!checkFileExtension(files)) return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+
         property.setCustomUser((CustomUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
-        property.setPhotosCount(files.length);
         Property _property = propertyService.addProperty(property);
 
         int i = 1;
         for(MultipartFile file : files){
-            String fileName = "photo_" + i++;
+            String fileName = "photo_" + i++ + '.' + file.getOriginalFilename().split("\\.")[1].toLowerCase();
 
-            String uploadDir = "property-pictures/" + _property.getId() +"/";
+            String uploadDir = "src/main/resources/static/property-pictures/" + _property.getId() +"/";
 
             try {
-                FileUploadUtil.saveFile(uploadDir, fileName, file);
+                _property.addPhoto(fileRepository.save(file,_property.getId()));
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
 
+        propertyService.addProperty(_property);
         return new ResponseEntity<>(_property, HttpStatus.CREATED);
     }
 
@@ -136,6 +142,7 @@ public class PropertyController {
         if (checkIfIsAuthorOrAdmin(propertyId, customUser, role))
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 
+        fileRepository.deleteByPropertyId(propertyId);
         propertyService.removePropertyById(propertyId);
         return  ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 
@@ -145,5 +152,13 @@ public class PropertyController {
         if (!role.getName().equals("ROLE_ADMIN") && !customUser.getId().equals(propertyService.getPropertyById(propertyId).getCustomUser().getId()))
             return true;
         return false;
+    }
+
+    private boolean checkFileExtension(@RequestParam("images[]") MultipartFile[] files) {
+        for(MultipartFile file : files){
+            String extension = file.getOriginalFilename().split("\\.")[1].toLowerCase();
+            if(!extension.equals("jpg") && !extension.equals("jpeg") && !extension.equals("png")) return false;
+        }
+        return true;
     }
 }

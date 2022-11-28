@@ -5,6 +5,7 @@ import com.sun.istack.NotNull;
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 @Entity
@@ -23,7 +24,8 @@ public class Property {
 
     private int area;
 
-    private int photosCount;
+    @OneToMany
+    private Collection<Photo> photos = new ArrayList<>();
 
     @ManyToOne()
     private CustomUser customUser;
@@ -95,19 +97,15 @@ public class Property {
         this.customUser = customUser;
     }
 
-    public int getPhotosCount() {
-        return photosCount;
-    }
-
-    public void setPhotosCount(int photosCount) {
-        this.photosCount = photosCount;
-    }
-
-    public List<String> getPhotos(){
-        ArrayList<String> photos = new ArrayList<>();
-        for (int i = 0; i < photosCount; i++) {
-            photos.add("property-pictures/" + id +"/"+"photo_" + i+1);
-        }
+    public Collection<Photo> getPhotos() {
         return photos;
+    }
+
+    public void setPhotos(Collection<Photo> photos) {
+        this.photos = photos;
+    }
+
+    public void addPhoto(Photo photo){
+        photos.add(photo);
     }
 }

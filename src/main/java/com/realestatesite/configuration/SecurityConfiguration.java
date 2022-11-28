@@ -39,6 +39,8 @@ public class SecurityConfiguration{
                 .antMatchers("/getProperty").permitAll()
                 .antMatchers("/all").permitAll()
                 .antMatchers("/search").permitAll()
+                .antMatchers("/test").permitAll()
+                .antMatchers("/images/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .logout()
