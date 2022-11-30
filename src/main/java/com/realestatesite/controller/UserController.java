@@ -47,8 +47,13 @@ public class UserController {
             return new ResponseEntity<>("Username is already taken!", HttpStatus.BAD_REQUEST);
         }
 
+        if(userService.existsByEmail(registerDTO.getEmail())){
+            return new ResponseEntity<>("Email already exists!", HttpStatus.BAD_REQUEST);
+        }
+
         CustomUser user = new CustomUser();
         user.setUsername(registerDTO.getUsername());
+        user.setEmail(registerDTO.getEmail());
         user.setPassword(passwordEncoder.encode(registerDTO.getPassword()));
         if(roleService.getRole("ROLE_USER") == null)
         {

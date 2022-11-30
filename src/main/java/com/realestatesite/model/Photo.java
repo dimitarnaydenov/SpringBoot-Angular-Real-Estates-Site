@@ -1,5 +1,6 @@
 package com.realestatesite.model;
 
+import com.sun.istack.NotNull;
 import org.springframework.beans.factory.annotation.Value;
 
 import javax.persistence.*;
@@ -10,6 +11,7 @@ public class Photo {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @NotNull
     private String url;
 
     public Photo() {

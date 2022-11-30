@@ -38,6 +38,10 @@ public class UserService implements UserDetailsService {
         return userRepository.findByUsername(username).isPresent();
     }
 
+    public boolean existsByEmail(String email){
+        return userRepository.findByEmail(email).isPresent();
+    }
+
     public CustomUser findUserById(int id){
         return userRepository.findById(id).get();
     }

@@ -10,7 +10,7 @@ import java.util.Date;
 
 @Component
 public class JwtTokenUtil {
-    private static final long EXPIRE_DURATION = 24*60 * 1000; // 24 hour
+    private static final long EXPIRE_DURATION = 24 * 60 * 60 * 1000;
 
     @Value("${app.jwt.secret}")
     private String SECRET_KEY;
@@ -31,16 +31,8 @@ public class JwtTokenUtil {
         try {
             Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token);
             return true;
-        } catch (ExpiredJwtException ex) {
-            //LOGGER.error("JWT expired", ex.getMessage());
-        } catch (IllegalArgumentException ex) {
-           //LOGGER.error("Token is null, empty or only whitespace", ex.getMessage());
-        } catch (MalformedJwtException ex) {
-            ///LOGGER.error("JWT is invalid", ex);
-        } catch (UnsupportedJwtException ex) {
-            //LOGGER.error("JWT is not supported", ex);
-        } catch (SignatureException ex) {
-            //LOGGER.error("Signature validation failed");
+        } catch (ExpiredJwtException | SignatureException | UnsupportedJwtException | MalformedJwtException | IllegalArgumentException ex) {
+            System.out.println(ex.getMessage());
         }
 
         return false;

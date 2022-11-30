@@ -1,9 +1,11 @@
 package com.realestatesite.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.sun.istack.NotNull;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.validation.annotation.Validated;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -17,7 +19,11 @@ public class CustomUser implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @NotNull
     private String username;
+    @NotNull
+    private String email;
+    @NotNull
     @JsonIgnore
     private String password;
 
@@ -31,8 +37,9 @@ public class CustomUser implements UserDetails {
     public CustomUser() {
     }
 
-    public CustomUser(String username, String password) {
+    public CustomUser(String username, String email, String password) {
         this.username = username;
+        this.email = email;
         this.password = password;
     }
 
@@ -51,6 +58,10 @@ public class CustomUser implements UserDetails {
     public void setUsername(String username) {
         this.username = username;
     }
+
+    public String getEmail() { return email; }
+
+    public void setEmail(String email) { this.email = email; }
 
     public String getPassword() {
         return password;
