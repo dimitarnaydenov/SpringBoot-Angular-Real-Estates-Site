@@ -1,0 +1,4 @@
+
+  .pagination ::ng-deep .ngx-pagination .current {
+    background: #2eca6a;
+  }
