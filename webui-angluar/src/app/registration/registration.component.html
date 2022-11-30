@@ -1,20 +1,43 @@
-<form #register = "ngForm" (ngSubmit) = "onClickSubmit(register.value)">
-    <div class="container">
-      <h1>Register</h1>
-      <p>Please fill in this form to create an account.</p>
-      <hr>
-  
-      <label for="username"><b>Username</b></label>
-      <input type="text" placeholder="Enter Username" name="username" id="username" required ngModel>
-      <br />
-      <br />
-      <label for="psw"><b>Password</b></label>
-      <input type="password" placeholder="Enter Password" name="password" id="password" required ngModel>
-  
-      <hr>
-  
-      <button type="submit" class="registerbtn">Register</button>
-    </div>
-  
-    
-  </form>
+<div class="container intro-single">
+
+        <div class="title-box-d">
+          <h3 class="title-d">Registration</h3>
+        </div>
+        <div  *ngIf="notSamePasswords" class="alert">Passwords do not match!</div>
+        <div  *ngIf="error" class="alert">{{errorMessage}}</div>
+        <div class="form" >
+          <form class="form-a" #register = "ngForm" (ngSubmit) = "onClickSubmit(register.value)" ngNativeValidate>
+            <div class="row">
+              <div class="col-md-12 mb-2">
+                <div class="form-group">
+                  <label class="pb-2" for="username">Username</label>
+                  <input type="text" class="form-control form-control-lg form-control-a" placeholder="Username" name="username" id="username" required ngModel>
+                </div>
+              </div>
+              <div class="col-md-12 mb-2">
+                <div class="form-group">
+                  <label class="pb-2" for="username">Email</label>
+                  <input type="email" class="form-control form-control-lg form-control-a" placeholder="Email" name="email" id="email" required ngModel>
+                </div>
+              </div>
+              <div class="col-md-12 mb-2">
+                <div class="form-group">
+                  <label class="pb-2" for="password">Password</label>
+                  <input type="password" class="form-control form-control-lg form-control-a" placeholder="Password" name="password" id="password" required ngModel>
+                </div>
+              </div>
+              <div class="col-md-12 mb-2">
+                <div class="form-group">
+                  <label class="pb-2" for="repeatPassword">Repeat Password</label>
+                  <input type="password" class="form-control form-control-lg form-control-a" placeholder="Repeat Password" name="repeatPassword" id="repeatPassword" required ngModel>
+                </div>
+              </div>
+             <div class="col-md-12">
+                <button type="submit" class="btn btn-b">Register</button>
+              </div>
+            </div>
+          </form>
+        
+        </div>
+</div>
+
