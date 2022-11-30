@@ -11,6 +11,62 @@ img{
   margin: 2px;
 }
 
+/*------/ Property Single /-----*/
+.gallery-property {
+	margin-bottom: 3rem;
+  }
+  
+  .property-price {
+	margin: 0 auto;
+  }
+  
+  .property-price .card-header-c {
+	padding: 0;
+  }
+  
+  .summary-list {
+	padding-right: 1rem;
+	color: #000000;
+  }
+  
+  .summary-list .list {
+	padding: 0;
+	line-height: 2;
+  }
+  
+  .summary-list .list span {
+	color: #555555;
+  }
+  
+  @media (max-width: 767px) {
+	.property-agent {
+	  margin-top: 2.5rem;
+	}
+  }
+  
+  .property-agent .title-agent {
+	font-weight: 600;
+  }
+  
+  .property-agent ul {
+	line-height: 2;
+	color: #000000;
+  }
+  
+  .property-agent .socials-a {
+	text-align: center;
+  }
+  
+  @media (max-width: 991px) {
+	.property-contact {
+	  margin-top: 2.5rem;
+	}
+  }
+
+ 
+ 
+  
+
   /*======================================
   //--//-->   SERVICES - CARD-C
   ======================================*/
