@@ -1,0 +1,90 @@
+<div class="container intro-single">
+
+    <div class="title-box-d">
+      <h3 class="title-d">Edit Property</h3>
+    </div>
+    
+    <div class="form" >
+      <form class="form-a" #editProperty = "ngForm" (ngSubmit) = "editPropertyOnSubmit(editProperty.value)" enctype="multipart/form-data" ngNativeValidate>
+        <div class="row">
+          <div class="col-md-12 mb-2">
+            <div class="form-group">
+              <label class="pb-2" for="type">Type</label>
+              <select class="form-control form-control-lg form-control-a" name="type" id="type" [(ngModel)]="property.type" required ngModel>
+                <option value="apartment">Apartment</option>
+                <option value="house">House</option>
+              </select>
+            </div>
+          </div>
+          <div class="col-md-12 mb-2">
+            <div class="form-group">
+              <label class="pb-2" for="address">Address</label>
+              <input type="text" class="form-control form-control-lg form-control-a" placeholder="Address" name="address" id="address" [(ngModel)]="property.address" required ngModel>
+            </div>
+          </div>
+          <div class="col-md-12 mb-2">
+            <div class="form-group">
+              <label class="pb-2" for="price">Price</label>
+              <input type="number" class="form-control form-control-lg form-control-a" placeholder="Price" name="price" id="price" min="1" [(ngModel)]="property.price" required ngModel>
+            </div>
+          </div>
+          <div class="col-md-12 mb-2">
+            <div class="form-group">
+              <label class="pb-2" for="area">Area</label>
+              <input type="number" class="form-control form-control-lg form-control-a" placeholder="Area" name="area" id="area" min="1" [(ngModel)]="property.area" required ngModel>
+            </div>
+          </div>
+          <div class="col-md-12 mb-2">
+            <div class="form-group">
+              <label class="pb-2" for="beds">Number of Bedrooms</label>
+              <input type="number" class="form-control form-control-lg form-control-a" placeholder="Number of Bedrooms" name="beds" id="beds" min="1" [(ngModel)]="property.beds" required ngModel>
+            </div>
+          </div>
+          <div class="col-md-12 mb-2">
+            <div class="form-group">
+              <label class="pb-2" for="baths">Number of Bathrooms</label>
+              <input type="number" class="form-control form-control-lg form-control-a" placeholder="Number of Bathrooms" name="baths" id="baths" min="1" [(ngModel)]="property.baths" required ngModel>
+            </div>
+          </div>
+          <div class="col-md-12 mb-2">
+            <div class="form-group">
+              <label class="pb-2" for="description">Description</label>
+              <textarea class="form-control form-control-lg form-control-a" placeholder="" name="description" id="description" [(ngModel)]="property.description" ngModel></textarea>
+            </div>
+          </div>
+          <div class="col-md-12 mb-2">
+            <div class="form-group">
+              <label class="pb-2" for="phoneNumber">Phone Number</label>
+              <input type="text" class="form-control form-control-lg form-control-a" placeholder="Phone Number" name="phoneNumber" id="phoneNumber"  [(ngModel)]="property.phoneNumber" min="6" max="10" required ngModel>
+            </div>
+          </div>
+          <div class="col-md-12 mb-2" *ngIf="!showinput[0]">
+              <img src="{{property.photos[0].url}}">
+            <div><button type="button" class="btn btn-danger" (click)="deleteImage(property.photos[0].id,0)">Delete</button></div>
+          </div>
+          <div class="col-md-12 mb-2" *ngIf="!showinput[1]">
+            <img src="{{property.photos[1].url}}">
+          <div><button type="button" class="btn btn-danger" (click)="deleteImage(property.photos[1].id,1)">Delete</button></div>
+          </div>
+          <div class="col-md-12 mb-2" *ngIf="showinput[0]">
+            <div class="form-group">
+              <label class="pb-2" for="image">Image 1</label>
+              <input class="form-control form-control-lg form-control-a" name="image" type="file" accept="image/*" name="image" id="image" (change)="fileChange1($event)" ngModel/>
+            </div>
+          </div>
+          <div class="col-md-12 mb-2" *ngIf="showinput[1]">
+            <div class="form-group">
+              <label class="pb-2" for="image">Image 2</label>
+              <input class="form-control form-control-lg form-control-a" name="image" type="file" accept="image/*" name="image" id="image" (change)="fileChange2($event)" ngModel/>
+            </div>
+          </div>
+         <div class="col-md-12">
+            <button type="submit" class="btn btn-b">Edit Property</button>
+          </div>
+        </div>
+      </form>
+    
+    </div>
+</div>
+
+
