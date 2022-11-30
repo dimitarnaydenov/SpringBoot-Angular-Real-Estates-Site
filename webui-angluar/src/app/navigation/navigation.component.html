@@ -1,0 +1,77 @@
+<div [ngClass]="open ? 'box-collapse-open':''">
+<!-- ======= Property Search Section ======= -->
+<div class="click-closed"></div>
+<!--/ Form Search Star /-->
+<div class="box-collapse">
+  <div class="title-box-d">
+    <h3 class="title-d">Search Property</h3>
+  </div>
+  <span class="close-box-collapse right-boxed bi bi-x" (click)="closeSearch()"></span>
+  <div class="box-collapse-wrap form">
+    <form class="form-a" #search = "ngForm" (ngSubmit) = "searchProperties(search.value)" ngNativeValidate>
+      <div class="row">
+        <div class="col-md-12 mb-2">
+          <div class="form-group">
+            <label class="pb-2" for="search">Keyword</label>
+            <input type="text" class="form-control form-control-lg form-control-a" placeholder="Keyword" name="search" required ngModel>
+          </div>
+        </div>
+        <div class="col-md-12">
+          <button type="submit" class="btn btn-b">Search Property</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div><!-- End Property Search Section -->>
+
+<!-- ======= Header/Navbar ======= -->
+<nav class="navbar navbar-default navbar-trans navbar-expand-lg fixed-top">
+    <div class="container">
+      <button class="navbar-toggler collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#navbarDefault" aria-controls="navbarDefault" aria-expanded="false" aria-label="Toggle navigation">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+      <a class="navbar-brand text-brand" href="index.html">RealEstate<span class="color-b">Agency</span></a>
+
+      <div class="navbar-collapse collapse justify-content-center" id="navbarDefault">
+        <ul class="navbar-nav">
+
+          <li class="nav-item">
+            <a class="nav-link" routerLinkActive="active" routerLink="/home">Home</a>
+          </li>
+
+          <li class="nav-item">
+            <a class="nav-link" routerLinkActive="active" routerLink="/properties">Properties</a>
+          </li>
+
+          <li class="nav-item" *ngIf="!isLogged">
+            <a class="nav-link" routerLinkActive="active" routerLink="/login">Login</a>
+          </li>
+
+          <li class="nav-item" *ngIf="!isLogged">
+            <a class="nav-link" routerLinkActive="active" routerLink="/register">Register</a>
+          </li>
+
+          <li class="nav-item" *ngIf="isLogged">
+            <a class="nav-link" routerLinkActive="active" routerLink="/addProperty">Add Property</a>
+          </li>
+
+          <li class="nav-item" *ngIf="isLogged">
+            <a class="nav-link" routerLinkActive="active" routerLink="/myProperties">My Properties</a>
+          </li>
+          
+          <li class="nav-item" *ngIf="isLogged">
+            <a class="nav-link " (click)="logout()" href="#">Logout</a>
+          </li>
+        </ul>
+      </div>
+
+      <button type="button" class="btn btn-b-n navbar-toggle-box navbar-toggle-box-collapse" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo01" (click)="showSearch($event)">
+        <i class="bi bi-search"></i>
+      </button>
+
+    </div>
+  </nav><!-- End Header/Navbar -->
+
+</div>
