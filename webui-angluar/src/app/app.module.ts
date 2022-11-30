@@ -4,9 +4,9 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { PropertiesComponent } from './properties/properties.component';
-import { PropertyService } from './property.service';
+import { PropertyService } from './services/property.service';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http'
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { LoginComponent } from './login/login.component';
 import { RegistrationComponent } from './registration/registration.component';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
@@ -18,6 +18,10 @@ import { PropertyItemComponent } from './property-item/property-item.component';
 import { HttpRequestInterceptor } from './helpers/http.interceptor';
 import { FooterComponent } from './footer/footer.component';
 import { NgxPaginationModule } from 'ngx-pagination';
+import { AddPropertyComponent } from './add-property/add-property.component';
+import { MyPropertiesComponent } from './my-properties/my-properties.component';
+import { AuthGuard } from './helpers/auth/auth.guard';
+import { EditPropertyComponent } from './edit-property/edit-property.component';
 
 
 @NgModule({
@@ -29,7 +33,10 @@ import { NgxPaginationModule } from 'ngx-pagination';
     HomeComponent,
     NavigationComponent,
     PropertyItemComponent,
-    FooterComponent
+    FooterComponent,
+    AddPropertyComponent,
+    MyPropertiesComponent,
+    EditPropertyComponent
   ],
   imports: [
     BrowserModule,
@@ -41,7 +48,7 @@ import { NgxPaginationModule } from 'ngx-pagination';
     ModalModule.forRoot(),
     NgxPaginationModule
   ],
-  providers: [PropertyService, {provide: HTTP_INTERCEPTORS, useClass: HttpRequestInterceptor, multi: true }],
+  providers: [PropertyService, {provide: HTTP_INTERCEPTORS, useClass: HttpRequestInterceptor, multi: true }, AuthGuard],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
