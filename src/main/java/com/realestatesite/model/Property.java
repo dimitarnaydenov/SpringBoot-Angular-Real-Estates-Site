@@ -147,7 +147,7 @@ public class Property {
         this.photos = photos;
     }
 
-    public void addPhoto(Photo photo){
-        photos.add(photo);
-    }
+    public void addPhoto(Photo photo){ photos.add(photo); }
+
+    public void deletePhoto(Photo photo){ photos.remove(photo); }
 }

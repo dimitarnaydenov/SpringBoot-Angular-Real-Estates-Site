@@ -1,8 +1,10 @@
 package com.realestatesite.services;
 
 import com.realestatesite.model.Photo;
+import com.realestatesite.model.Property;
 import com.realestatesite.repositories.FileRepository;
 import com.realestatesite.repositories.PhotoRepository;
+import com.realestatesite.repositories.PropertyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -11,6 +13,7 @@ import org.springframework.util.FileSystemUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -24,12 +27,15 @@ public class FileService implements FileRepository {
     @Autowired
     PhotoRepository photoRepository;
 
+    @Autowired
+    PropertyRepository propertyRepository;
+
     private final String root = "src/main/resources/static/property-pictures/";
 
     @Override
-    public Photo save(MultipartFile file, int propertyId) throws IOException {
+    public Photo save(MultipartFile file, Property property) throws IOException {
         String fileName = StringUtils.cleanPath(file.getOriginalFilename());
-        Path uploadDir = Paths.get(root + propertyId +"/");
+        Path uploadDir = Paths.get(root + property.getId() +"/");
 
         if (!Files.exists(uploadDir)) {
             Files.createDirectories(uploadDir);
@@ -38,7 +44,7 @@ public class FileService implements FileRepository {
         try (InputStream inputStream = file.getInputStream()) {
             Path filePath = uploadDir.resolve(fileName);
             Files.copy(inputStream, filePath, StandardCopyOption.REPLACE_EXISTING);
-            return photoRepository.save(new Photo( fileName));
+            return photoRepository.save(new Photo( fileName,property));
         } catch (IOException ioe) {
             throw new IOException("Could not save image file: " + fileName, ioe);
         }
@@ -48,6 +54,18 @@ public class FileService implements FileRepository {
     public void deleteByPropertyId(int propertyId) {
         Path deleteDir = Paths.get(root + propertyId +"/");
         FileSystemUtils.deleteRecursively(deleteDir.toFile());
+    }
+
+    @Override
+    public void deleteByFileId(int fileId) {
+        Photo photo = photoRepository.findById(fileId).get();
+        Property property = photo.getProperty();
+        File file = new File(root + photo.getProperty().getId() +"/" + photo.getUrl());
+        if (file.delete()){
+            property.deletePhoto(photo);
+            propertyRepository.save(property);
+            photoRepository.delete(photoRepository.findById(fileId).get());
+        }
     }
 
     @Override

@@ -78,14 +78,9 @@ public class PropertyController {
         property.setCustomUser((CustomUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
         Property _property = propertyService.addProperty(property);
 
-        int i = 1;
         for(MultipartFile file : files){
-            String fileName = "photo_" + i++ + '.' + file.getOriginalFilename().split("\\.")[1].toLowerCase();
-
-            String uploadDir = "src/main/resources/static/property-pictures/" + _property.getId() +"/";
-
             try {
-                _property.addPhoto(fileRepository.save(file,_property.getId()));
+                _property.addPhoto(fileRepository.save(file,_property));
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -93,26 +88,6 @@ public class PropertyController {
 
         propertyService.addProperty(_property);
         return new ResponseEntity<>(_property, HttpStatus.CREATED);
-    }
-
-    @PostMapping(path = "/test")
-    public void test(@RequestParam("image") MultipartFile multipartFile) throws IOException {
-        String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
-
-        String uploadDir = "user-photos/" + 1;
-
-        Path uploadPath = Paths.get(uploadDir);
-
-        if (!Files.exists(uploadPath)) {
-            Files.createDirectories(uploadPath);
-        }
-
-        try (InputStream inputStream = multipartFile.getInputStream()) {
-            Path filePath = uploadPath.resolve(fileName);
-            Files.copy(inputStream, filePath, StandardCopyOption.REPLACE_EXISTING);
-        } catch (IOException ioe) {
-            throw new IOException("Could not save image file: " + fileName, ioe);
-        }
     }
 
     @GetMapping("/getProperty")
@@ -127,9 +102,13 @@ public class PropertyController {
     }
 
     @PostMapping("/editProperty")
-    @RolesAllowed("ROLE_ADMIN")
-    public Property editPropertyById(@RequestParam String id, @RequestBody Property property) {
-        return propertyService.editPropertyById(Integer.parseInt(id),property);
+    @RolesAllowed({"ROLE_USER","ROLE_ADMIN"})
+    public ResponseEntity<Property> editPropertyById(@RequestParam String id, @ModelAttribute Property property,@RequestParam("photosToRemove[]") String[] photosId, @RequestParam("images[]") MultipartFile[] files) {
+        //TODO check if author or admin
+
+        if (!checkFileExtension(files)) return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+
+        return new ResponseEntity<>(propertyService.editPropertyById(Integer.parseInt(id),property,photosId, files), HttpStatus.CREATED);
     }
 
     @DeleteMapping("/removeProperty")

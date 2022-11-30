@@ -1,5 +1,6 @@
 package com.realestatesite.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sun.istack.NotNull;
 import org.springframework.beans.factory.annotation.Value;
 
@@ -14,11 +15,16 @@ public class Photo {
     @NotNull
     private String url;
 
+    @ManyToOne()
+    @JsonIgnore
+    private Property property;
+
     public Photo() {
     }
 
-    public Photo(String url) {
+    public Photo(String url, Property property) {
         this.url = url;
+        this.property = property;
     }
 
     public Integer getId() {
@@ -35,5 +41,13 @@ public class Photo {
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    public Property getProperty() {
+        return property;
+    }
+
+    public void setProperty(Property property) {
+        this.property = property;
     }
 }
