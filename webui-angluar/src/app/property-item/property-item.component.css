@@ -1,0 +1,71 @@
+img{
+    max-width: 800px;
+    max-height: 900px;
+}
+
+.desc-body{
+  margin-top: 212px;
+}
+
+.btn{
+  margin: 2px;
+}
+
+  /*======================================
+  //--//-->   SERVICES - CARD-C
+  ======================================*/
+  .card-box-c {
+	position: relative;
+  }
+  
+  @media (max-width: 767px) {
+	.card-box-c {
+	  margin-bottom: 2rem;
+	}
+  }
+  
+  .card-header-c {
+	padding: 0 1rem 1rem 1rem;
+  }
+  
+  .card-body-c {
+	padding: 0.5rem 0.5rem 0 0.5rem;
+  }
+  
+  @media (max-width: 767px) {
+	.card-body-c {
+	  padding: 0;
+	}
+  }
+  
+  .card-footer-c {
+	padding-left: 0.5rem;
+  }
+  
+  .card-box-ico {
+	padding: 1rem 10rem 1rem 2.5rem;
+	border: 5px solid #2eca6a;
+  }
+  
+  .card-box-ico span {
+	font-size: 4rem;
+	color: #000000;
+  }
+  
+  .title-c {
+	font-size: 2.5rem;
+	font-weight: 600;
+	margin-left: -150px;
+  }
+  
+  @media (min-width: 768px) {
+	.title-c {
+	  font-size: 1.8rem;
+	}
+  }
+  
+  @media (min-width: 992px) {
+	.title-c {
+	  font-size: 2.5rem;
+	}
+  }
