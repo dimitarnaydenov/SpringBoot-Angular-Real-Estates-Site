@@ -23,7 +23,10 @@ export class PropertyService {
   formData.append('address', data.address);
   formData.append('price', data.price);
   formData.append('description', data.description);
+  formData.append('beds', data.beds);
+  formData.append('baths', data.baths);
   formData.append('area', data.area);
+  formData.append('phoneNumber', data.phoneNumber);
   for (var x = 0; x < images.length; x++) {
     formData.append('images[]', images[x]);
   }
@@ -32,15 +35,31 @@ export class PropertyService {
   return this.http.post<any>(this.url+'addProperty', formData)
   }
 
-  getPropertyById(id:string){
+  editProperty(propertyId:any, data:any, photosToRemove:any[], image1:any,image2:any){
+    const formData: FormData = new FormData();
+  
+    let images = [image1,image2]
+  
+    formData.append('type', data.type);
+    formData.append('address', data.address);
+    formData.append('price', data.price);
+    formData.append('description', data.description);
+    formData.append('beds', data.beds);
+    formData.append('baths', data.baths);
+    formData.append('area', data.area);
+    formData.append('phoneNumber', data.phoneNumber);
+    for (var i = 0; i < photosToRemove.length; i++) {
+      formData.append('photosToRemove[]', photosToRemove[i]);
+    }
+    for (var x = 0; x < images.length; x++) {
+      formData.append('images[]', images[x]);
+    }
     
-  //   let properties = [
-  //     {id:1,name:"Apartment", price:"500",address:"ul.131",size:"60",description:"s gledka kum Vitosha"},
-  //     {id:2,name:"Apartment", price:"600",address:"bul.Tsarigradsko shose",size:"80",description:""},
-  //     {id:3,name:"House", price:"1500",address:"lozen",size:"160",description:"s dva garaja"}
-  //  ];
+  
+    return this.http.post<any>(this.url+`editProperty?id=${propertyId}`, formData)
+    }
 
-   //return properties.find(p => p.id === parseInt(id))
+  getPropertyById(id:string){
    return this.http.get<any>(this.url+`getProperty?id=${id}`)
   }
 
@@ -64,4 +83,8 @@ export class PropertyService {
   searchProperties(search:string){
     return this.http.get(this.url+`search?search=${search}`)
   }
+
+  // removeImageById(id:string){
+  //   return this.http.delete(this.url+`removeFile/?id=${id}`)
+  // }
 }
