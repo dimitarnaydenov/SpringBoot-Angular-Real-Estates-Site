@@ -9,6 +9,8 @@ import { UserService } from '../services/user.service';
 })
 export class LoginComponent implements OnInit {
 
+  public error = false;
+
   constructor(private userService:UserService, private router:Router) { }
 
   ngOnInit(): void {
@@ -27,7 +29,7 @@ export class LoginComponent implements OnInit {
         }); // To refresh navigation
        },
        error: err => {
-         alert("Username or password is incorrect!")
+        this.error = true;
        }})
       
  }

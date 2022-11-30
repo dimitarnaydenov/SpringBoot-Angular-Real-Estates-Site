@@ -3,7 +3,7 @@
         <div class="title-box-d">
           <h3 class="title-d">Login</h3>
         </div>
-        
+        <div  *ngIf="error" class="alert">Username or password is incorrect!</div>
         <div class="form" >
           <form class="form-a" #login = "ngForm" (ngSubmit) = "onClickSubmit(login.value)" ngNativeValidate>
             <div class="row">
