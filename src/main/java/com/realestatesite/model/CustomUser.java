@@ -20,8 +20,10 @@ public class CustomUser implements UserDetails {
     private Integer id;
 
     @NotNull
+    @Column(unique=true)
     private String username;
     @NotNull
+    @Column(unique=true)
     private String email;
     @NotNull
     @JsonIgnore
