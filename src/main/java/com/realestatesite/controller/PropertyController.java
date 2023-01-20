@@ -37,14 +37,16 @@ import java.util.Map;
 //@RequestMapping("/api/auth")
 public class PropertyController {
 
-    @Autowired
     PropertyService propertyService;
-
-    @Autowired
     UserService userService;
+    FileRepository fileRepository;
 
     @Autowired
-    FileRepository fileRepository;
+    public PropertyController(PropertyService propertyService, UserService userService, FileRepository fileRepository) {
+        this.propertyService = propertyService;
+        this.userService = userService;
+        this.fileRepository = fileRepository;
+    }
 
     @GetMapping("/all")
     public ResponseEntity<Map<String, Object>> getAllProperties(@RequestParam(defaultValue = "0") int page,

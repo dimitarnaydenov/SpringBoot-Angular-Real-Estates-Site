@@ -12,8 +12,12 @@ import org.springframework.web.bind.annotation.*;
 @CrossOrigin(origins = "http://localhost:4200")
 public class FilesController {
 
-    @Autowired
     FileRepository fileRepository;
+
+    @Autowired
+    public FilesController(FileRepository fileRepository) {
+        this.fileRepository = fileRepository;
+    }
 
     @GetMapping("/images/{propertyId:.+}/{filename:.+}")
     @ResponseBody

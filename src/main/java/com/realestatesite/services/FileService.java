@@ -24,11 +24,15 @@ import java.nio.file.StandardCopyOption;
 
 @Service
 public class FileService implements FileRepository {
-    @Autowired
+
     PhotoRepository photoRepository;
+    PropertyRepository propertyRepository;
 
     @Autowired
-    PropertyRepository propertyRepository;
+    public FileService(PhotoRepository photoRepository, PropertyRepository propertyRepository) {
+        this.photoRepository = photoRepository;
+        this.propertyRepository = propertyRepository;
+    }
 
     private final String root = "src/main/resources/static/property-pictures/";
 

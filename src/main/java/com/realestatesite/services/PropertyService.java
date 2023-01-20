@@ -16,11 +16,15 @@ import java.util.List;
 @Service
 public class PropertyService{
 
-    @Autowired
+
     private PropertyRepository propertyRepository;
+    private FileRepository fileRepository;
 
     @Autowired
-    private FileRepository fileRepository;
+    public PropertyService(PropertyRepository propertyRepository, FileRepository fileRepository) {
+        this.propertyRepository = propertyRepository;
+        this.fileRepository = fileRepository;
+    }
 
     public Page<Property> findAll(Pageable paging){
         return propertyRepository.findAll(paging);

@@ -18,8 +18,13 @@ import java.util.stream.Collectors;
 @Service
 public class UserService implements UserDetailsService {
 
-    @Autowired
+
     private UserRepository userRepository;
+
+    @Autowired
+    public UserService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     public UserDetails loadUserByUsername(String username) {
         CustomUser user = userRepository.findByUsername(username)

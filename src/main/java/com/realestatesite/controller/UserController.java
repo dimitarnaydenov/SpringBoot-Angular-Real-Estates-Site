@@ -28,17 +28,21 @@ import org.springframework.web.bind.annotation.RestController;
 //@RequestMapping("/api/auth")
 public class UserController {
 
-    @Autowired
     UserService userService;
-    @Autowired
     RoleService roleService;
-    @Autowired
     AuthenticationManager authManager;
-    @Autowired
     JwtTokenUtil jwtUtil;
+    private PasswordEncoder passwordEncoder;
 
     @Autowired
-    private PasswordEncoder passwordEncoder;
+    public UserController(UserService userService, RoleService roleService,
+                          AuthenticationManager authManager, JwtTokenUtil jwtUtil, PasswordEncoder passwordEncoder) {
+        this.userService = userService;
+        this.roleService = roleService;
+        this.authManager = authManager;
+        this.jwtUtil = jwtUtil;
+        this.passwordEncoder = passwordEncoder;
+    }
 
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@RequestBody RegisterDTO registerDTO){
