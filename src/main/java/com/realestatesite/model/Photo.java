@@ -19,12 +19,16 @@ public class Photo {
     @JsonIgnore
     private Property property;
 
+    @Column(length = 1000)
+    private byte[] data;
+
     public Photo() {
     }
 
-    public Photo(String url, Property property) {
+    public Photo(String url, Property property, byte[] data) {
         this.url = url;
         this.property = property;
+        this.data = data;
     }
 
     public Integer getId() {
@@ -49,5 +53,13 @@ public class Photo {
 
     public void setProperty(Property property) {
         this.property = property;
+    }
+
+    public byte[] getData() {
+        return data;
+    }
+
+    public void setData(byte[] data) {
+        this.data = data;
     }
 }

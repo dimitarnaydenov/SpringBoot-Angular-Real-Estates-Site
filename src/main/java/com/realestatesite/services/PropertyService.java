@@ -1,8 +1,10 @@
 package com.realestatesite.services;
 
 import com.realestatesite.model.CustomUser;
+import com.realestatesite.model.Photo;
 import com.realestatesite.model.Property;
 import com.realestatesite.repositories.FileRepository;
+import com.realestatesite.repositories.PhotoRepository;
 import com.realestatesite.repositories.PropertyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -12,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class PropertyService{
@@ -19,11 +22,13 @@ public class PropertyService{
 
     private PropertyRepository propertyRepository;
     private FileRepository fileRepository;
+    private PhotoRepository photoRepository;
 
     @Autowired
-    public PropertyService(PropertyRepository propertyRepository, FileRepository fileRepository) {
+    public PropertyService(PropertyRepository propertyRepository, FileRepository fileRepository, PhotoRepository photoRepository) {
         this.propertyRepository = propertyRepository;
         this.fileRepository = fileRepository;
+        this.photoRepository = photoRepository;
     }
 
     public Page<Property> findAll(Pageable paging){
@@ -34,17 +39,29 @@ public class PropertyService{
         return propertyRepository.save(property);
     }
 
-    public Property getPropertyById(int id){return propertyRepository.findById(id).get();}
+    public Property getPropertyById(int id){
+        Optional<Property> property = propertyRepository.findById(id);
+        if(property.isPresent())
+            return property.get();
+
+        return null;
+    }
 
     public void removePropertyById(int id){propertyRepository.deleteById(id);}
 
     public Property editPropertyById(int id, Property propertyDTO, String[] photosId, MultipartFile[] files){
 
-        for(String photoId: photosId){
-            fileRepository.deleteByFileId(Integer.parseInt(photoId));
-        }
-
         Property property = propertyRepository.findById(id).get();
+
+        for(String photoId: photosId){
+
+            Photo photo = photoRepository.findById(Integer.parseInt(photoId)).get();
+            if(property.getPhotos().contains(photo)){
+                property.getPhotos().remove(photo);
+                photoRepository.delete(photo);
+            }
+
+        }
 
         if(propertyDTO.getType() != null){
             property.setType(propertyDTO.getType());

@@ -10,9 +10,5 @@ import java.io.IOException;
 public interface FileRepository {
     Photo save(MultipartFile file, Property property) throws IOException;
 
-    void deleteByPropertyId(int propertyId);
-
-    void deleteByFileId(int fileId);
-
-    Resource load(String filename, int propertyId);
+    byte[] getPhoto(String filename);
 }
