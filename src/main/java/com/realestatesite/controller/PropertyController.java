@@ -17,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -106,9 +107,13 @@ public class PropertyController {
     @PostMapping("/editProperty")
     @RolesAllowed({"ROLE_USER","ROLE_ADMIN"})
     public ResponseEntity<Property> editPropertyById(@RequestParam String id, @ModelAttribute Property property,@RequestParam("photosToRemove[]") String[] photosId, @RequestParam("images[]") MultipartFile[] files) {
-        //TODO check if author or admin
+        UserDetails principal = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        CustomUser customUser = userService.getUser(principal.getUsername());
 
         if (!checkFileExtension(files)) return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+
+        if (checkIfIsAuthorOrAdmin(property.getId(), customUser, (Role)customUser.getRoles().toArray()[0]))
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 
         return new ResponseEntity<>(propertyService.editPropertyById(Integer.parseInt(id),property,photosId, files), HttpStatus.CREATED);
     }
@@ -123,7 +128,6 @@ public class PropertyController {
         if (checkIfIsAuthorOrAdmin(propertyId, customUser, role))
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 
-        fileRepository.deleteByPropertyId(propertyId);
         propertyService.removePropertyById(propertyId);
         return  ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 
