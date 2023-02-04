@@ -35,7 +35,7 @@ export class EditPropertyComponent implements OnInit {
     
     let i = 0;
     for (const photo of this.property.photos) {
-      photo.url = this.url + "images/" + this.id + '/' + photo.url;
+      photo.url = this.url + "images/" + photo.url;
       this.showinput[i++] = false;
     }
   }});

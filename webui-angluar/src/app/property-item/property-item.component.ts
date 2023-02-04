@@ -36,7 +36,7 @@ export class PropertyItemComponent implements OnInit {
       this.isCreator = this.property.customUser.username === this.userService.getUsername();
 
       for (const photo of this.property.photos) {
-        photo.url = this.url + "images/" + this.id + '/' + photo.url;
+        photo.url = this.url + "images/" + photo.url;
       }
     }});
 
