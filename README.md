@@ -15,4 +15,13 @@ The front-end implementation is located "webui-angluar" directory
 * Angular
 * BootStrap
 
-
+#### Features available based on the user role
+* Admin
+  * Update all offers
+  * Delete all offers
+* User
+  * Register into System
+  * Login
+  * Add offers
+  * Update own offers
+  * Delete own offers
