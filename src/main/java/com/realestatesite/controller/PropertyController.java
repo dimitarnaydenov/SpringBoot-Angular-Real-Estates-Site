@@ -32,6 +32,7 @@ import java.nio.file.StandardCopyOption;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:4200")
@@ -112,7 +113,7 @@ public class PropertyController {
 
         if (!checkFileExtension(files)) return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
 
-        if (checkIfIsAuthorOrAdmin(property.getId(), customUser, (Role)customUser.getRoles().toArray()[0]))
+        if (!checkIfIsAuthorOrAdmin(property.getId(), customUser, customUser.getRoles()))
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 
         return new ResponseEntity<>(propertyService.editPropertyById(Integer.parseInt(id),property,photosId, files), HttpStatus.CREATED);
@@ -123,9 +124,8 @@ public class PropertyController {
     public ResponseEntity<?> removePropertyById(@RequestParam String id){
         int propertyId = Integer.parseInt(id);
         CustomUser customUser = (CustomUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Role role = (Role)customUser.getRoles().toArray()[0];
 
-        if (checkIfIsAuthorOrAdmin(propertyId, customUser, role))
+        if (!checkIfIsAuthorOrAdmin(propertyId, customUser, customUser.getRoles()))
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 
         propertyService.removePropertyById(propertyId);
@@ -133,15 +133,15 @@ public class PropertyController {
 
     }
 
-    private boolean checkIfIsAuthorOrAdmin(int propertyId, CustomUser customUser, Role role) {
-        if (!role.getName().equals("ROLE_ADMIN") && !customUser.getId().equals(propertyService.getPropertyById(propertyId).getCustomUser().getId()))
+    private boolean checkIfIsAuthorOrAdmin(int propertyId, CustomUser customUser, List<Role> roles) {
+        if (roles.stream().anyMatch(r -> r.getName().equals("ROLE_ADMIN")) || customUser.getId().equals(propertyService.getPropertyById(propertyId).getCustomUser().getId()))
             return true;
         return false;
     }
 
     private boolean checkFileExtension(@RequestParam("images[]") MultipartFile[] files) {
         for(MultipartFile file : files){
-            String extension = file.getOriginalFilename().split("\\.")[1].toLowerCase();
+            String extension = Objects.requireNonNull(file.getOriginalFilename()).split("\\.")[1].toLowerCase();
             if(!extension.equals("jpg") && !extension.equals("jpeg") && !extension.equals("png")) return false;
         }
         return true;
