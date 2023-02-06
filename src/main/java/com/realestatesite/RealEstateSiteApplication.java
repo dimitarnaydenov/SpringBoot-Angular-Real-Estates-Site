@@ -1,7 +1,11 @@
 package com.realestatesite;
 
+import com.realestatesite.model.CustomUser;
 import com.realestatesite.model.Property;
+import com.realestatesite.model.Role;
 import com.realestatesite.repositories.PropertyRepository;
+import com.realestatesite.repositories.RoleRepository;
+import com.realestatesite.repositories.UserRepository;
 import com.realestatesite.services.PropertyService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -19,10 +23,11 @@ public class RealEstateSiteApplication {
 	}
 
     @Bean
-    public CommandLineRunner demoData(PropertyRepository repo) {
+    public CommandLineRunner demoData(PropertyRepository propertyRepository, RoleRepository roleRepository) {
         return args -> {
 
-            repo.save(new Property("apartment", new BigDecimal("120000"),"Sofia, ul 131","50 sq.m."));
+            roleRepository.save(new Role("ROLE_ADMIN"));
+            roleRepository.save(new Role("ROLE_USER"));
         };
     }
 
