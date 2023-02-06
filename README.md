@@ -1,23 +1,18 @@
 # SpringBoot-Angular Real Estates Site
+The project objective is creating online web application for property buyers and sellers.
 
 
-Fetch all properties with pagination
-```
-GET /all?page={page}&size={size}
-```
-Fetch one property by id
-```
-GET /getProperty?id={id}
-```
-Delete property by id
-```
-DELETE /removeProperty?id={id}
-```
-Fetch one photo by id
-```
-GET /images/{filename}
-```
-Search by term
-```
-GET /search?search={search}
+The back-end implementation is located in "src" directory
+
+
+The front-end implementation is located "webui-angluar" directory
+## Technology
+* Spring Boot
+* Spring Data JPA
+* MySQL
+* JWT Authentication
+* Maven
+* Angular
+* BootStrap
+
 
