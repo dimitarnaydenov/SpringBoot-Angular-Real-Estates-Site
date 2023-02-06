@@ -25,23 +25,21 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:4200")
-//@RequestMapping("/api/auth")
 public class UserController {
 
     UserService userService;
     RoleService roleService;
     AuthenticationManager authManager;
     JwtTokenUtil jwtUtil;
-    private PasswordEncoder passwordEncoder;
+
 
     @Autowired
     public UserController(UserService userService, RoleService roleService,
-                          AuthenticationManager authManager, JwtTokenUtil jwtUtil, PasswordEncoder passwordEncoder) {
+                          AuthenticationManager authManager, JwtTokenUtil jwtUtil) {
         this.userService = userService;
         this.roleService = roleService;
         this.authManager = authManager;
         this.jwtUtil = jwtUtil;
-        this.passwordEncoder = passwordEncoder;
     }
 
     @PostMapping("/register")
@@ -55,16 +53,7 @@ public class UserController {
             return new ResponseEntity<>("Email already exists!", HttpStatus.BAD_REQUEST);
         }
 
-        CustomUser user = new CustomUser();
-        user.setUsername(registerDTO.getUsername());
-        user.setEmail(registerDTO.getEmail());
-        user.setPassword(passwordEncoder.encode(registerDTO.getPassword()));
-        if(roleService.getRole("ROLE_USER") == null)
-        {
-            roleService.addRole(new Role("ROLE_USER"));
-        }
-        user.addRole(roleService.getRole("ROLE_USER"));
-        userService.addUser(user);
+        userService.addUser(registerDTO);
 
         return ResponseEntity.status(HttpStatus.CREATED).build();
 
