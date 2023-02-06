@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -35,6 +36,7 @@ public class PropertyService{
         return propertyRepository.findAll(paging);
     }
 
+    @Transactional
     public Property addProperty(Property property){
         return propertyRepository.save(property);
     }
@@ -47,8 +49,10 @@ public class PropertyService{
         return null;
     }
 
+    @Transactional
     public void removePropertyById(int id){propertyRepository.deleteById(id);}
 
+    @Transactional
     public Property editPropertyById(int id, Property propertyDTO, String[] photosId, MultipartFile[] files){
 
         Property property = propertyRepository.findById(id).get();

@@ -9,6 +9,7 @@ import com.realestatesite.repositories.PhotoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -25,6 +26,7 @@ public class FileService implements FileRepository {
     }
 
     @Override
+    @Transactional
     public Photo save(MultipartFile file, Property property) throws IOException {
         String fileName = StringUtils.cleanPath(property.getId()+'_'+file.getOriginalFilename());
 
