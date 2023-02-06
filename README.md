@@ -1,5 +1,5 @@
 # SpringBoot-Angular Real Estates Site
-The project objective is creating online web application for property buyers and sellers.
+Оnline web application for property buyers and sellers.
 
 
 The back-end implementation is located in "src" directory
