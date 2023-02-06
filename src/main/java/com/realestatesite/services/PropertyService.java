@@ -55,6 +55,8 @@ public class PropertyService{
     @Transactional
     public Property editPropertyById(int id, Property propertyDTO, String[] photosId, MultipartFile[] files){
 
+        if(propertyRepository.findById(id).isEmpty()) return  null;
+
         Property property = propertyRepository.findById(id).get();
 
         for(String photoId: photosId){
